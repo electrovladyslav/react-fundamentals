@@ -2,30 +2,60 @@
 // http://localhost:3000/isolated/exercise/06.js
 
 import * as React from 'react'
+import {useRef, useState} from "react";
 
 function UsernameForm({onSubmitUsername}) {
-  // 🐨 add a submit event handler here (`handleSubmit`).
-  // 💰 Make sure to accept the `event` as an argument and call
-  // `event.preventDefault()` to prevent the default behavior of form submit
-  // events (which refreshes the page).
-  // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
-  //
-  // 🐨 get the value from the username input (using whichever method
-  // you prefer from the options mentioned in the instructions)
-  // 💰 For example: event.target.elements[0].value
-  // 🐨 Call `onSubmitUsername` with the value of the input
+  const inputRef = useRef(null);
+  const inputEmailRef = React.useRef(null);
+  const [userName, setUserName] = useState('john');
+  const [emailError, setEmailError] = React.useState(null);
 
-  // 🐨 add the onSubmit handler to the <form> below
+  const handleInputChange = (event) => {
+    const {value} = event.target;
+    setUserName(value.toLowerCase()); // convert upperCase to lowerCase on the fly
+  }
 
-  // 🐨 make sure to associate the label to the input.
-  // to do so, set the value of 'htmlFor' prop of the label to the id of input
+  const handleEmailInputChange = (event) => {
+    const value = event.target.value;
+    console.log(value)
+    const isValid = value.includes('@') || !value;
+    setEmailError(isValid ? null :'Email must contain an @');
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    console.log(event.target.elements.userName.value) // userName - is a name/id attribute
+    const email = inputEmailRef.current.value;
+    onSubmitUsername(`User name: ${userName}, email: ${email}`);
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
-        <label>Username:</label>
-        <input type="text" />
+        <label htmlFor="userName">Username:</label>
+        <input
+          ref={inputRef}
+          value={userName}
+          onChange={handleInputChange}
+          type="text"
+          name="userName"
+          id='userName'
+        />
       </div>
-      <button type="submit">Submit</button>
+
+      <div>
+        <label htmlFor="userName">Email:</label>
+        <input
+          ref={inputEmailRef}
+          onChange={handleEmailInputChange}
+          defaultValue="john@doe.com"
+          type="text"
+          name="email"
+          id='email'
+        />
+        {emailError && <span role='alert' style={{color: 'coral'}}>{emailError}</span> }
+      </div>
+      <button type="submit" disabled={!!emailError}>Submit</button>
     </form>
   )
 }
