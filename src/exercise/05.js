@@ -19,14 +19,16 @@ import '../box-styles.css'
   // const largeBox = <div className={'box box--large'} style={{backgroundColor: 'orange', fontStyle: 'italic'}}>large orange box</div>
 
 function Box({style, children, size}) {
+  const sizeClassName = size ? ' box--' + size : '';
+  const boxStyle = {...style, ...{fontStyle: 'italic'},};
   return (
-      <div
-        className={`box box--${size}`}
-        style={{...{fontStyle: 'italic'}, ...style}}
-      >
-        {children}
-      </div>
-      )
+    <div
+      className={`box${sizeClassName}`}
+      style={boxStyle}
+    >
+      {children}
+    </div>
+    )
 
 }
 
